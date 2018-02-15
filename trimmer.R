@@ -1,0 +1,22 @@
+library(dplyr)
+library(tidytext)
+library(tm)
+library(ggplot2)
+library(RSelenium)
+library(rvest)
+library(stringr) 
+
+
+baseurl = "https://www.amazon.in/Philips-Trimmer-Cordless-QT4001-15/product-reviews/B00L8PEEAI/ref=cm_cr_arp_d_paging_btm_2?showViewpoints=1&pageNumber=1"
+n = read_html(baseurl)%>% html_nodes('.page-button a')%>%html_text()%>%gsub(",", "")%>%as.integer()%>%max()
+print(n)
+review_no=c()
+review_text = c()
+for(i in 1:500){
+  newpg = paste0("https://www.amazon.in/Philips-Trimmer-Cordless-QT4001-15/product-reviews/B00L8PEEAI/ref=cm_cr_arp_d_paging_btm_2?showViewpoints=1&pageNumber=",as.character(i))
+  review<-read_html(newpg)%>%html_nodes('.review-text')%>%html_text()
+  review_text <- append(review_text,review)
+  cat("writing page number:",i,"of",500,"\n")
+  write.csv(x = review_text,file = "trimmer.csv",col.names = FALSE,append = TRUE)
+  Sys.sleep(2)
+}
