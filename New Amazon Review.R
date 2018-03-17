@@ -28,7 +28,8 @@ extract_reviews<-function(baseurl,filename){
     review<-page%>%html_nodes('.review-text')%>%html_text()
     review_title <- page%>%html_nodes('a.a-size-base.review-title')%>%html_text()
     review_author <- page %>% html_nodes('span.a-size-base a.a-size-base')%>% html_text()
-    review_author_link <- page %>% html_nodes('span.a-size-base a.a-size-base')%>% html_attr('href')
+    review_author_link <- paste0("https://www.amazon.com",page %>% html_nodes('span.a-size-base a.a-size-base')%>% html_attr('href'))
+   
     review_rating <- page %>% html_nodes('div.a-row:nth-of-type(1) a.a-link-normal span.a-icon-alt')%>%html_text()
     
     review_data <- rbind(review_data, data.frame(review = review, 
@@ -45,6 +46,18 @@ extract_reviews<-function(baseurl,filename){
   paste0(f_name,".csv","is stored at","\n",getwd())
 }
 
-
-
 extract_reviews(baseurl,"samsung")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
