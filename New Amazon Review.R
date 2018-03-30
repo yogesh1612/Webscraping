@@ -9,7 +9,9 @@ if(!require(scales)){install.packages("scales")}else{library("scales")}
 
 baseurl = "https://www.amazon.com/Samsung-Galaxy-S8-Unlocked-64GB/product-reviews/B06Y14T5YW/ref=cm_cr_arp_d_paging_btm_2?ie=UTF8&reviewerType=all_reviews&pageNumber=1"
 extract_reviews<-function(baseurl,filename){
-  n = read_html(baseurl)%>% html_nodes('.page-button   a')%>%html_text()%>%as.integer()%>%max()
+  n = read_html(baseurl)%>% html_nodes('.page-button   a')%>%html_text()
+  n = as.numeric(gsub(",", "", n))
+  n = max(n)
   loop_url <- substr(baseurl,1,nchar(baseurl)-1)
   f_name = paste0(filename,".csv")
   
@@ -21,7 +23,7 @@ extract_reviews<-function(baseurl,filename){
   
   # if(n>500){n = 500}
   
-  for(i in 1:n){
+  for(i in 1:10){
     #newpg = baseurl
     newpg = paste0(loop_url,as.character(i))
     page = read_html(newpg)
@@ -29,7 +31,6 @@ extract_reviews<-function(baseurl,filename){
     review_title <- page%>%html_nodes('a.a-size-base.review-title')%>%html_text()
     review_author <- page %>% html_nodes('span.a-size-base a.a-size-base')%>% html_text()
     review_author_link <- paste0("https://www.amazon.com",page %>% html_nodes('span.a-size-base a.a-size-base')%>% html_attr('href'))
-   
     review_rating <- page %>% html_nodes('div.a-row:nth-of-type(1) a.a-link-normal span.a-icon-alt')%>%html_text()
     
     review_data <- rbind(review_data, data.frame(review = review, 
