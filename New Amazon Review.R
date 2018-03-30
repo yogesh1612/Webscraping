@@ -23,7 +23,7 @@ extract_reviews<-function(baseurl,filename){
   
   # if(n>500){n = 500}
   
-  for(i in 1:10){
+  for(i in 1:n){
     #newpg = baseurl
     newpg = paste0(loop_url,as.character(i))
     page = read_html(newpg)
